@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 const hbs = require('hbs');
-const geocode = require('./utils/geocode');
+const { geocode, geocodeReverse} = require('./utils/geocode');
 const forecast = require('./utils/forecast');
 
 const app = express();
@@ -74,16 +74,34 @@ app.get('/weather', (req, res) => {
     });
 });
 
-app.get('/products', (req, res) => {
-    if(!req.query.search) {
+app.get('/weather/myLocation', (req, res) => {
+    const { latitude, longitude } = req.query;
+
+    if(!latitude || !longitude) {
         return res.send({
-            error: 'You must provide a search term.'
+            error: 'Sorry, could not find your current location.'
         });
     }
-    
-    console.log(req.query.search);
-    res.send({
-        products: []
+
+    geocodeReverse({ latitude, longitude }, (error, location) => {
+        if(error){
+            return res.send({
+                error
+            });
+        }
+
+        forecast(latitude, longitude, (error, forecastData) => {
+            if(error){
+                return res.send({
+                    error
+                });
+            }
+
+            return res.send({
+                forecast: forecastData,
+                location
+            });
+        });
     });
 });
 

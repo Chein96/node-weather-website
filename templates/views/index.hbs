@@ -10,10 +10,14 @@
 <body>
     <div class="main-content">
         {{>header}}
-        <p>Use this site to get your weather</p>
+        <p>Use this site to get weather for:</p>
+
+        <button id="location-button">My current location</button>
+
+        <p>--- or ---</p>
 
         <form>
-            <input type="text" placeholder="Location" />
+            <input type="text" name="search" placeholder="Search location" />
             <button>Search</button>
         </form>
 
