@@ -25,6 +25,10 @@ weatherForm.addEventListener('submit', (e) => {
 });
 
 locationButton.addEventListener('click', () => {
+    if(!navigator.geolocation) {
+        return messageOne.textContent = 'Geolocation is not supported by your browser.';
+    }
+
     navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude }  = position.coords;
 
